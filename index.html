@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotina Semanal</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:#f7f7f5; --surface:#fff; --surf2:#f2f1ef;
+  --bd:rgba(0,0,0,0.09); --bd-s:rgba(0,0,0,0.16);
+  --t1:#0d0d0c; --t2:#50504d; --t3:#8a8884;
+  --r:10px; --r-sm:6px;
+  --font:'Calibri','Trebuchet MS',Arial,sans-serif;
+  --push-bg:#e6f1fb; --push-tx:#0c447c;
+  --pull-bg:#e1f5ee; --pull-tx:#085041;
+  --legs-bg:#faeeda; --legs-tx:#633806;
+  --stud-bg:#eeedfe; --stud-tx:#3c3489;
+  --read-bg:#eaf3de; --read-tx:#27500a;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#161615; --surface:#222221; --surf2:#2a2a28;
+    --bd:rgba(255,255,255,0.09); --bd-s:rgba(255,255,255,0.16);
+    --t1:#f2f2ef; --t2:#c2c1b6; --t3:#898781;
+    --push-bg:#0c447c; --push-tx:#b5d4f4;
+    --pull-bg:#085041; --pull-tx:#9fe1cb;
+    --legs-bg:#633806; --legs-tx:#fac775;
+    --stud-bg:#3c3489; --stud-tx:#cecbf6;
+    --read-bg:#173404; --read-tx:#c0dd97;
+  }
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);line-height:1.5;min-height:100vh}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 56px}
+.hd{padding:28px 0 22px;border-bottom:0.5px solid var(--bd-s);margin-bottom:36px}
+.hd-title{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-.02em}
+.hd-sub{font-size:13px;color:var(--t3);margin-top:4px}
+.sec{margin-bottom:52px}
+.sec-lbl{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.sec-title{font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.01em;margin-bottom:22px}
+.day-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:20px}
+@media(max-width:560px){.day-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.dc{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.dc-bar{height:3px}
+.dc-in{padding:10px 9px 13px}
+.dc-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3)}
+.dc-num{font-size:22px;font-weight:700;color:var(--t1);line-height:1.1;margin:3px 0 8px}
+.pill{display:inline-block;font-size:10px;font-weight:700;border-radius:5px;padding:2px 7px;line-height:1.5;margin-bottom:3px}
+.pill-ghost{background:var(--surf2);color:var(--t3);border:0.5px solid var(--bd-s)}
+.dc-time{font-size:11px;color:var(--t3);margin-top:5px}
+.rout-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:620px){.rout-grid{grid-template-columns:1fr}}
+.rout-card{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r);padding:16px 18px}
+.rout-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding-bottom:10px;border-bottom:0.5px solid var(--bd);margin-bottom:14px}
+.rr{display:flex;gap:14px;font-size:13px;margin-bottom:9px;align-items:flex-start}
+.rr:last-child{margin-bottom:0}
+.rt{font-weight:700;color:var(--t2);min-width:44px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.rl{color:var(--t1);line-height:1.4}
+.rs{font-size:11px;color:var(--t3);margin-top:2px}
+.divider{height:0.5px;background:var(--bd-s);margin:36px 0}
+.abc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:620px){.abc-grid{grid-template-columns:1fr}}
+.abc-card{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.abc-head{padding:14px 15px 12px;border-bottom:0.5px solid}
+.abc-tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px}
+.abc-name{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:3px}
+.abc-day{font-size:11px;margin-bottom:3px}
+.abc-mus{font-size:10px;line-height:1.4}
+.abc-body{padding:12px 15px 15px;flex:1}
+.esec{margin-bottom:10px}
+.esec:last-child{margin-bottom:0}
+.elbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);padding-bottom:5px;border-bottom:0.5px solid var(--bd);margin-bottom:6px}
+.erow{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;font-size:12px}
+.en{color:var(--t1);flex:1;line-height:1.3}
+.ev{color:var(--t3);font-size:11px;white-space:nowrap;margin-left:10px;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ================================================================
+   ██████╗  ██████╗ ███╗   ██╗███████╗██╗ ██████╗
+  ██╔════╝ ██╔═══██╗████╗  ██║██╔════╝██║██╔════╝
+  ██║      ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
+  ██║      ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
+  ╚██████╗ ╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
+   ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝
+
+  Edite APENAS este bloco. O restante do código
+  cuida da renderização automaticamente.
+
+  CORES disponíveis para o campo "cor":
+    "push"    → azul       (ex: treino de peito/ombros/tríceps)
+    "pull"    → verde-água (ex: treino de costas/bíceps)
+    "legs"    → âmbar      (ex: treino de pernas)
+    "estudo"  → roxo       (ex: estudos, cursos)
+    "leitura" → verde      (ex: leitura, lazer)
+    "neutro"  → cinza      (sem cor de destaque)
+================================================================ */
+
+const CONFIG = {
+
+  // Nome exibido no cabeçalho da página
+  nome: "Gabriel Mariano",
+
+  // ── Dias da semana ─────────────────────────────────────────
+  // Sempre 7 entradas, começando no domingo.
+  // duplo: true → exibe dois pills (atividade + "Descanso")
+  dias: [
+    { label: "Dom", atividade: "Leitura",  cor: "leitura", horario: "livre",  duplo: true  },
+    { label: "Seg", atividade: "Push A",   cor: "push",    horario: "18h30",  duplo: false },
+    { label: "Ter", atividade: "Estudos",  cor: "estudo",  horario: "19h00",  duplo: false },
+    { label: "Qua", atividade: "Pull B",   cor: "pull",    horario: "18h30",  duplo: false },
+    { label: "Qui", atividade: "Estudos",  cor: "estudo",  horario: "19h00",  duplo: false },
+    { label: "Sex", atividade: "Legs C",   cor: "legs",    horario: "18h30",  duplo: false },
+    { label: "Sáb", atividade: "Leitura",  cor: "leitura", horario: "livre",  duplo: true  },
+  ],
+
+  // ── Cards de rotina ────────────────────────────────────────
+  // Cada card tem título, cor e linhas com hora + texto.
+  // Linha com subtexto: adicione o campo  sub: "..."
+  rotinas: [
+    {
+      titulo: "DIAS DE TREINO — SEG · QUA · SEX",
+      cor: "push",
+      linhas: [
+        { hora: "07h30", texto: "Trabalho"          },
+        { hora: "17h30", texto: "Saída do trabalho" },
+        { hora: "18h30", texto: "Treino (≈ 1h30)"  },
+        { hora: "20h00", texto: "Jantar · descanso" },
+        { hora: "23h00", texto: "Sono"              },
+      ]
+    },
+    {
+      titulo: "DIAS DE ESTUDO — TER · QUI",
+      cor: "estudo",
+      linhas: [
+        { hora: "07h30", texto: "Trabalho"       },
+        { hora: "17h30", texto: "Saída · jantar" },
+        { hora: "19h00", texto: "Estudos (≈ 2h)",
+          sub: "Curso Karine Lago — IA · Power BI · Python · SQL" },
+        { hora: "21h00", texto: "Descanso livre" },
+        { hora: "23h00", texto: "Sono"           },
+      ]
+    },
+    {
+      titulo: "DIAS DE LEITURA E LAZER — SÁB · DOM",
+      cor: "leitura",
+      linhas: [
+        { hora: "Manhã", texto: "Leitura"                  },
+        { hora: "Tarde", texto: "Lazer · atividades livres" },
+        { hora: "Noite", texto: "Descanso completo"         },
+      ]
+    },
+  ],
+
+  // ── Fichas de treino ───────────────────────────────────────
+  // Cada ficha tem: tag, nome, dia/horário, grupos musculares,
+  // cor e seções com exercícios [ ["Nome", "Séries×Reps"] ]
+  treinos: [
+    {
+      tag:    "Treino A",
+      nome:   "Push",
+      dia:    "Segunda · 18h30",
+      grupos: "Peito · Ombros · Tríceps",
+      cor:    "push",
+      secoes: [
+        { nome: "Aquecimento",
+          exercicios: [["Panturrilha em pé", "3×12"]] },
+        { nome: "Principal",
+          exercicios: [
+            ["Supino Reto c/ Halt.",  "3×12"],
+            ["Crucifixo no Banco",    "3×12"],
+            ["Elevação Lateral",      "3×12"],
+            ["Elevação Frontal",      "3×12"],
+            ["Tríceps Máquina",       "3×12"],
+            ["Tríceps Corda",         "3×12"],
+          ]},
+        { nome: "Core",
+          exercicios: [["Abdominal Supra", "4×15"]] },
+        { nome: "Aeróbico",
+          exercicios: [["Cardio (esteira)", "20 min"]] },
+      ]
+    },
+    {
+      tag:    "Treino B",
+      nome:   "Pull",
+      dia:    "Quarta · 18h30",
+      grupos: "Costas · Trapézio · Bíceps · Antebraço",
+      cor:    "pull",
+      secoes: [
+        { nome: "Aquecimento",
+          exercicios: [["Panturrilha em pé", "3×12"]] },
+        { nome: "Principal",
+          exercicios: [
+            ["Puxada Frontal (pronada)", "4×15"],
+            ["Remada Alta (máquina)",    "3×12"],
+            ["Encolhimento (máquina)",   "3×12"],
+            ["Rosca Direta c/ Halt.",    "3×12"],
+            ["Rosca Martelo c/ Halt.",   "3×12"],
+            ["Rosca Inversa (barra)",    "3×12"],
+            ["Rosca Punho na Polia",     "3×12"],
+          ]},
+        { nome: "Core",
+          exercicios: [["Abdominal Infra", "4×15"]] },
+        { nome: "Aeróbico",
+          exercicios: [["Cardio (esteira)", "20 min"]] },
+      ]
+    },
+    {
+      tag:    "Treino C",
+      nome:   "Legs",
+      dia:    "Sexta · 18h30",
+      grupos: "Pernas · Glúteos · Core",
+      cor:    "legs",
+      secoes: [
+        { nome: "Aquecimento",
+          exercicios: [["Panturrilha em pé", "3×12"]] },
+        { nome: "Principal",
+          exercicios: [
+            ["Agachamento Livre",   "3×12"],
+            ["Elevação de Quadril", "3×12"],
+            ["Cadeira Extensora",   "3×12"],
+            ["Cadeira Flexora",     "3×12"],
+          ]},
+        { nome: "Core",
+          exercicios: [
+            ["Abdominal Lombar",  "3×15"],
+            ["Abdominal Oblíquo", "4×15"],
+          ]},
+        { nome: "Aeróbico",
+          exercicios: [["Cardio (esteira)", "20 min"]] },
+      ]
+    },
+  ],
+
+}; /* ← FIM DO CONFIG — não edite abaixo desta linha */
+
+
+/* ================================================================
+   MOTOR DE RENDERIZAÇÃO — não é necessário editar
+================================================================ */
+
+const CORES = {
+  push:    { bg: 'var(--push-bg)', tx: 'var(--push-tx)' },
+  pull:    { bg: 'var(--pull-bg)', tx: 'var(--pull-tx)' },
+  legs:    { bg: 'var(--legs-bg)', tx: 'var(--legs-tx)' },
+  estudo:  { bg: 'var(--stud-bg)', tx: 'var(--stud-tx)' },
+  leitura: { bg: 'var(--read-bg)', tx: 'var(--read-tx)' },
+  neutro:  { bg: 'var(--surf2)',   tx: 'var(--t3)'      },
+};
+
+function getSunday(d) {
+  const dt = new Date(d);
+  dt.setDate(dt.getDate() - dt.getDay());
+  dt.setHours(0, 0, 0, 0);
+  return dt;
+}
+
+function weekLabel(sun) {
+  const sat = new Date(sun); sat.setDate(sun.getDate() + 6);
+  const M = ['janeiro','fevereiro','março','abril','maio','junho',
+             'julho','agosto','setembro','outubro','novembro','dezembro'];
+  const m1 = sun.getMonth(), m2 = sat.getMonth(), y = sat.getFullYear();
+  return m1 === m2
+    ? `${sun.getDate()} a ${sat.getDate()} de ${M[m2]} de ${y}`
+    : `${sun.getDate()} de ${M[m1]} a ${sat.getDate()} de ${M[m2]} de ${y}`;
+}
+
+function buildDayCards(sun) {
+  return CONFIG.dias.map((d, i) => {
+    const date = new Date(sun); date.setDate(sun.getDate() + i);
+    const cor = CORES[d.cor] || CORES.neutro;
+    const pills = d.duplo
+      ? `<span class="pill" style="background:${cor.bg};color:${cor.tx};display:block;margin-bottom:4px">${d.atividade}</span>
+         <span class="pill pill-ghost">Descanso</span>`
+      : `<span class="pill" style="background:${cor.bg};color:${cor.tx}">${d.atividade}</span>
+         <div class="dc-time">${d.horario}</div>`;
+    return `
+      <div class="dc">
+        <div class="dc-bar" style="background:${cor.tx}"></div>
+        <div class="dc-in">
+          <div class="dc-name">${d.label}</div>
+          <div class="dc-num">${date.getDate()}</div>
+          ${pills}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function buildRoutineCards() {
+  return CONFIG.rotinas.map(r => {
+    const cor = CORES[r.cor] || CORES.neutro;
+    const linhas = r.linhas.map(l => `
+      <div class="rr">
+        <span class="rt">${l.hora}</span>
+        <div>
+          <div class="rl">${l.texto}</div>
+          ${l.sub ? `<div class="rs">${l.sub}</div>` : ''}
+        </div>
+      </div>`).join('');
+    return `
+      <div class="rout-card">
+        <div class="rout-title" style="color:${cor.tx}">${r.titulo}</div>
+        ${linhas}
+      </div>`;
+  }).join('');
+}
+
+function buildTreino() {
+  const cards = CONFIG.treinos.map(t => {
+    const cor = CORES[t.cor] || CORES.neutro;
+    const secoes = t.secoes.map(s => {
+      const exs = s.exercicios.map(([ex, sets]) =>
+        `<div class="erow"><span class="en">${ex}</span><span class="ev">${sets}</span></div>`
+      ).join('');
+      return `<div class="esec"><div class="elbl">${s.nome}</div>${exs}</div>`;
+    }).join('');
+    return `
+      <div class="abc-card">
+        <div class="abc-head" style="background:${cor.bg};border-color:${cor.tx}">
+          <div class="abc-tag" style="color:${cor.tx}">${t.tag}</div>
+          <div class="abc-name" style="color:${cor.tx}">${t.nome}</div>
+          <div class="abc-day" style="color:${cor.tx}">${t.dia}</div>
+          <div class="abc-mus" style="color:${cor.tx}">${t.grupos}</div>
+        </div>
+        <div class="abc-body">${secoes}</div>
+      </div>`;
+  }).join('');
+  return `
+    <section class="sec" id="treino">
+      <div class="sec-title">Ficha de Treino — Método ABC</div>
+      <div class="abc-grid">${cards}</div>
+    </section>`;
+}
+
+function render() {
+  const sun = getSunday(new Date());
+  document.title = `Rotina Semanal — ${CONFIG.nome}`;
+  document.getElementById('app').innerHTML = `
+    <header class="hd">
+      <div class="hd-title">Rotina Semanal</div>
+      <div class="hd-sub">${CONFIG.nome}</div>
+    </header>
+    <section class="sec" id="cronograma">
+      <div class="sec-lbl">${weekLabel(sun)}</div>
+      <div class="sec-title">Cronograma Semanal</div>
+      <div class="day-grid">${buildDayCards(sun)}</div>
+      <div class="rout-grid">${buildRoutineCards()}</div>
+    </section>
+    <div class="divider"></div>
+    ${buildTreino()}`;
+}
+
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>
